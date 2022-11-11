@@ -1,10 +1,7 @@
-die()
+_die()
 {
-    # setopt ksh_arrays
-
-    error "$@"
+    _error "$@"
     exit 1
 
-    # setopt noksh_arrays
 }
 

@@ -1,5 +1,5 @@
-debug()
+_debug()
 {
-    ${_debug} && log "$@"
+    ${__debug} && _log "$@"
 
 }

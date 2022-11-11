@@ -1,8 +1,4 @@
-error()
+_error()
 {
-    # setopt ksh_arrays
-
-    log "$@" >&2
-
-    # setopt noksh_arrays
+    _log "$@" >&2
 }

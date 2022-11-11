@@ -1,10 +1,11 @@
 # Makefile
 
-install: ~/.aws/profile_organizer ~/.zshrc
+SITEFUN=/usr/local/share/zsh/site-functions
+LOCALBIN=/usr/local/bin
 
-~/.aws/profile_organizer: .
-	test -d $@ || mkdir $@
-	(cd distribution && cp -r . $@)
+install: 
+	test -d ${SITEFUN} || mkdir ${SITEFUN}
+	(cd distribution/functions && cp -p * ${SITEFUN} )
+	test -d ${LOCALBIN} || mkdir ${LOCALBIN}
+	(cd distribution/bin && cp -p * ${LOCALBIN})
 
-~/.zshrc: .
-	( grep -q profile_organizer/functions ~/.zshrc || cat distribution/rc/addon >> ~/.zshrc )
