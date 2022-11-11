@@ -1,0 +1,32 @@
+# Generic settings
+
+LOGDATEFORMAT='+%Y/%m/%d-%H:%M'
+_debug=${_debug:-false}
+
+export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+
+# Generic settings
+
+LOGDATEFORMAT='+%Y/%m/%d-%H:%M'
+_debug=${_debug:-false}
+
+export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+
+#
+
+if test -f ~/.awsdefaultenv
+then
+	awsenv $(cat ~/.awsdefaultenv)
+else
+	log "No ~/.awsdefaultenv -- using ~/.aws/[config | credentials]"
+	awsenv default
+fi
+
+if test -f ~/.awsdefaultprofile
+then
+	awsprofile $(cat ~/.awsdefaultprofile)
+else
+	log "No ~/.awsdefaultprofile -- using default" >&2
+	awsprofile default
+fi
+

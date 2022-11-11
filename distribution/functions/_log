@@ -1,0 +1,13 @@
+
+# --- log
+#
+#       write timestemped log message with parameter(s)
+#
+log()
+{
+    # setopt ksh_arrays
+
+    echo "$(date ${LOGDATEFORMAT}) - $@"
+
+    # setopt noksh_arrays
+}

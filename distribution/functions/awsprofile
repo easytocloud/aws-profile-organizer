@@ -1,0 +1,40 @@
+# --- awsprofile
+#
+# 	Select a profile from your ~/.aws/config and set AWS_PROFILE accordingly
+
+awsprofile() 
+{
+  # setopt ksh_arrays
+
+  if [[ $# -ne 1 ]]
+  then # interactive
+    if test -t 0
+    then
+      local max=$(_list_profiles | wc -l | tr -d ' ')
+
+      _list_profiles | awk '{ print NR, $0 }' | column 
+
+      echo -n "Enter profile number [1-${max}]> "; read n
+      if test -n "$n" -a "$n" -gt 0 -a "$n" -le $max 2>/dev/null
+      then
+        export AWS_PROFILE=$( _list_profiles |  sed -n ${n}p )
+      else
+        _error "Value out of range, profile remains $AWS_PROFILE"
+      fi
+    else
+      _error "Usage: $0 [profile]  -- without parameter interactive mode reads from tty"
+      return 1
+    fi
+  else # process arg
+    if grep -q "^\[profile $1\]" ${AWS_CONFIG_FILE:-~/.aws/config} 2> /dev/null
+    then
+      export AWS_PROFILE=$1
+    else
+      _error "[$1]: No such profile."
+      return 2
+    fi
+  fi  
+
+  # setopt noksh_arrays
+}
+

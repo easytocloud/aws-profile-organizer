@@ -1,0 +1,48 @@
+# --- awsenv
+#
+#	awsenv links ~/.aws/config and ~/.aws/credentials from ~/.aws/aws-envs
+#
+#	without parameters it offers a menu with available envs to choose from, or pass requested env as parameter
+
+awsenv()
+{
+    if ! test -h ~/.aws/credentials || ! test -h ~/.aws/config
+    then
+	_error "[awsenv] Your credentials- or config- file is not a symbolic link. Please run aws-profile-organizer setup"
+        return 1
+    else
+	if [ $# -ne 1 ] 
+	then
+	    if test -t 0
+	    then
+		max=$( ls ~/.aws/aws-envs | wc -l | tr -d ' ' )
+		ls ~/.aws/aws-envs | awk '{ print NR, $0 }' | column 
+		echo -n "Enter environment number [1-${max}]> "; read n
+		if test -n "$n" -a "$n" -gt 0 -a "$n" -le $max 2>/dev/null
+		then
+		    export AWS_ENV=$( ls ~/.aws/aws-envs | sed -n ${n}p )
+		else
+		    _error "Value out of range, environment remains $AWS_ENV"
+		    return 1
+		fi
+	    else
+		_error "Usage: awsenv [environment]  -- without parameter interactive mode reads from tty"
+	        return 1
+	    fi
+	else
+	    AWS_ENV=${1}
+	fi
+
+	if [ "${AWS_ENV}" = "default" ]
+	then
+	    export AWS_PROFILE=$( _list_profiles |  sed -n 1p )
+	else
+	    pushd ~/.aws 2>/dev/null 1>&2
+            rm config credentials
+            ln -s aws-envs/${AWS_ENV}/config ~/.aws/config
+            ln -s aws-envs/${AWS_ENV}/credentials ~/.aws/credentials
+	    export AWS_PROFILE=$( _list_profiles |  sed -n 1p ) 
+            popd 2>/dev/null 1>&2
+	fi
+    fi
+}

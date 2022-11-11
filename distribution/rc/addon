@@ -1,0 +1,6 @@
+#
+# add functions for AWS Profile Organizer to zsh's $fpath and autoload all functions
+#
+
+fpath=(~/.aws/profile_organizer/functions $fpath);
+autoload -U $fpath[1]/*(.:t)
