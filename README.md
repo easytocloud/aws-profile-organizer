@@ -51,10 +51,9 @@ To manage profiles within an environment, use standard aws cli's ```aws configur
 
 **NOTE** When activating an environment, awsenv creates symbolic links from the ~/.aws/credentials and ~/.aws/config files to the corresponding files in the environment of choice.
 Environments are kept in ~/.aws/aws-envs in directories named after the environment.
-{: .note}
 
-You can (should?) display the current environment and profile in your prompt. 
-If you already use zsh and oh-my-zsh, why not Have a look at our agnoster-based [oh-my-easytocloud](https://github.com/easytocloud/oh-my-easytocloud) prompt.
+You should probablydisplay the current environment and profile in your prompt. 
+If you already use zsh and oh-my-zsh, why not have a look at our agnoster-based [oh-my-easytocloud](https://github.com/easytocloud/oh-my-easytocloud) prompt.
 
 ## Profile selection
 AWS CLI uses two files in ~/.aws to store profiles. Profiles can be used on the commanline explicitely, like:
@@ -92,14 +91,22 @@ $ echo $AWS_PROFILE
 development
 ```
 
+### aws configure
+You can use ```aws configure``` (part of aws-cli) to configure a profile. 
+When no profile name is specified, it configures the profile named default, 
+but other profiles can be configured in very much the same way:
+
+```
+aws configure --profile sandbox
 ```
 
-### aws configure
-You can use ```aws configure``` (part of aws-cli) to configure a profile. When no name is specified, it configures the profile named default, but other profiles can be configured in very
-much the same way with ```aws configure --profile sandbox```. The command interactively asks for information that is stored in ~/.aws. aws-profile-organizer doesn't change this standard behaviour.
+The command interactively asks for information that is stored in ~/.aws. 
+
+aws-profile-organizer doesn't change this standard behaviour.
 
 ## Files
 The two files that make a profile are
+
 ### ~/.aws/credentials 
 The credentials file contains long-term credentials known as the Access Key Id and Secret Acces Key, which can be seen as the username/password for CLI operations.
 Storing AK/SK in this credentials file is against best practice, but necessary in some cases - notably before version 2 of the CLI.
@@ -131,14 +138,14 @@ AWS_SHARED_CREDENTIALS_FILE=~/.aws/credentials
 
 However, these variables are honoured by the CLI, but not all SDKs (for languages like node, python etc) use them accordingly. 
 
-## Setup
+## Initial Setup
 Before you can switch between AWS environments, you have to migrate your current setup with one ~/.aws/credentials and ~/.aws/config into an environment.
 ```
 aws-profile-organizer-setup
 ```
 This moves your current single configuration into a named environment. This is a one-time operation.
 ```
-$ **aws-profile-organizer-setup**
+$ *aws-profile-organizer-setup*
 Sat Nov 12 09:08:06 CET 2022 - Setting up /Users/awscli/.zshrc for use with aws profile organizer
 Please enter default environment name or ENTER for current value [default]: **white**
 Sat Nov 12 09:08:18 CET 2022 - Moving your current settings into awsenv white
@@ -151,11 +158,11 @@ The screenshot above shows how a standard setup is converted into a setup with a
 The environments are stored in directories below ~/.aws/aws-envs where the name of the environment is the
 name of the directory:
 
-```
+```yaml
 ~/.aws/aws-envs
-  + white/
-    config
-    credentials
+  - white
+    - config
+    - credentials
 ```
 
 setup will add some lines to your .zshrc to set your default environment and profile. For that it uses two files:
