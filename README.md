@@ -47,7 +47,7 @@ $ awsenv --init blue
 ```
 
 To switch between profiles in an environment, use awsprofile.
-To manage profiles within an environment, use standard aws cli's ```aws configure```.
+To manage profiles within an environment, use standard aws cli's `aws configure`.
 
 **NOTE** When activating an environment, awsenv creates symbolic links from the ~/.aws/credentials and ~/.aws/config files to the corresponding files in the environment of choice.
 Environments are kept in ~/.aws/aws-envs in directories named after the environment.
@@ -92,7 +92,7 @@ development
 ```
 
 ### aws configure
-You can use ```aws configure``` (part of aws-cli) to configure a profile. 
+You can use `aws configure` (part of aws-cli) to configure a profile. 
 When no profile name is specified, it configures the profile named default, 
 but other profiles can be configured in very much the same way:
 
@@ -110,7 +110,7 @@ The two files that make a profile are
 ### ~/.aws/credentials 
 The credentials file contains long-term credentials known as the Access Key Id and Secret Acces Key, which can be seen as the username/password for CLI operations.
 Storing AK/SK in this credentials file is against best practice, but necessary in some cases - notably before version 2 of the CLI.
-With CLI version 2, have a look at ```aws sso login``` as an alternative.
+With CLI version 2, have a look at `aws sso login` as an alternative.
 
 ~~~
 [sandbox]
@@ -145,9 +145,9 @@ aws-profile-organizer-setup
 ```
 This moves your current single configuration into a named environment. This is a one-time operation.
 ```
-$ *aws-profile-organizer-setup*
+$ aws-profile-organizer-setup
 Sat Nov 12 09:08:06 CET 2022 - Setting up /Users/awscli/.zshrc for use with aws profile organizer
-Please enter default environment name or ENTER for current value [default]: **white**
+Please enter default environment name or ENTER for current value [default]: white
 Sat Nov 12 09:08:18 CET 2022 - Moving your current settings into awsenv white
 Sat Nov 12 09:08:18 CET 2022 - Setting your AWS_ENV to white
 Sat Nov 12 09:08:18 CET 2022 - Setup completed
