@@ -53,7 +53,8 @@ To manage profiles within an environment, use standard aws cli's ```aws configur
 Environments are kept in ~/.aws/aws-envs in directories named after the environment.
 {: .note}
 
-You can (should?) display the current environment and profile in your prompt.
+You can (should?) display the current environment and profile in your prompt. 
+If you already use zsh and oh-my-zsh, why not Have a look at our agnoster-based [oh-my-easytocloud](https://github.com/easytocloud/oh-my-easytocloud) prompt.
 
 ## Profile selection
 AWS CLI uses two files in ~/.aws to store profiles. Profiles can be used on the commanline explicitely, like:
