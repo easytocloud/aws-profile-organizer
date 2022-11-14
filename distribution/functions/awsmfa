@@ -12,69 +12,58 @@
 # [default]
 # ak = AKI....
 # sk = Zx.....
-#
-# [default.mfa]
 # mfa_serial=arn:aws:iam::123123123123:user/alice
 #
-# awsmfa will request temporary session credentials and store them in [default.mfa] 
+# [default__mfa]
+# <temp tokens>
+#
+# awsmfa will request temporary session credentials and store them in [default__mfa] 
 # after awsmfa the AWS_PROFILE variable will reference the temporary profile
 # 
 
-_find_mfa_arn()
-{
-    cat ~/.aws/credentials | sed -n "/^\[${1}\]/,/^\[/p" | grep mfa_serial | cut -f2 -d = | tr -d ' '
-}
+local AWS_USER_PROFILE=${AWS_PROFILE}
+local AWS_MFA_PROFILE=${AWS_PROFILE}__mfa
+local ARN_OF_MFA=$(aws configure get ${AWS_USER_PROFILE}.mfa_serial)
 
-awsmfa () 
-{
-    local AWS_USER_PROFILE=${AWS_PROFILE}
-    local AWS_MFA_PROFILE=${AWS_PROFILE}.mfa
-    local ARN_OF_MFA=$(_find_mfa_arn ${AWS_MFA_PROFILE})
+if test -z ${ARN_OF_MFA}
+then
+    _error "Profile ${AWS_USER_PROFILE} not referencing mfa_serial in ~/.aws/credentials"
+    return 1
+fi
 
-    if test -z ${ARN_OF_MFA}
+if [[ $# -ne 1 ]]
+then
+    if test -t 
     then
-        _error "No MFA profile [${AWS_MFA_PROFILE}] referencing mfa_serial for ${AWS_USER_PROFILE} in ~/.aws/credentials"
-	return 1
+        echo -n "Enter MFA Token value: " && read mfa
+    else
+        error "Usage: $0 token_value"
+        return 1
     fi
+fi
 
-    if [[ $# -ne 1 ]]
-    then
-        if test -t 
-        then
-            echo -n "Enter MFA Token value: " && read mfa
-        else
-            error "Usage: $0 token_value"
-            return 1
-        fi
-    fi
+local MFA_VALUE=${1:-$mfa}
 
-    
-    local MFA_VALUE=${1:-$mfa}
+local DURATION=3600
 
-    local DURATION=3600
+_debug $ARN_OF_MFA $MFA_VALUE
 
-    _debug $ARN_OF_MFA $MFA_VALUE
+read _AWS_ACCESS_KEY_ID _AWS_SECRET_ACCESS_KEY _AWS_SESSION_TOKEN <<< $( \
+aws --profile ${AWS_USER_PROFILE} sts get-session-token \
+    --duration $DURATION  \
+    --serial-number $ARN_OF_MFA \
+    --token-code $MFA_VALUE \
+    --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
+    --output text  )
 
-    read _AWS_ACCESS_KEY_ID _AWS_SECRET_ACCESS_KEY _AWS_SESSION_TOKEN <<< $( \
-    aws --profile ${AWS_USER_PROFILE} sts get-session-token \
-        --duration $DURATION  \
-        --serial-number $ARN_OF_MFA \
-        --token-code $MFA_VALUE \
-        --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
-        --output text  )
+if [[ -z "${_AWS_ACCESS_KEY_ID}" ]]
+then
+    _error "awsmfa: getting session token failed"
+    return
+fi
 
-    if [[ -z "${_AWS_ACCESS_KEY_ID}" ]]
-    then
-        _error "awsmfa: getting session token failed"
-        return
-    fi
+aws --profile ${AWS_MFA_PROFILE} configure set aws_access_key_id "${_AWS_ACCESS_KEY_ID}" 
+aws --profile ${AWS_MFA_PROFILE} configure set aws_secret_access_key "${_AWS_SECRET_ACCESS_KEY}" 
+aws --profile ${AWS_MFA_PROFILE} configure set aws_session_token "${_AWS_SESSION_TOKEN}"
 
-    aws --profile ${AWS_MFA_PROFILE} configure set aws_access_key_id "${_AWS_ACCESS_KEY_ID}" 
-    aws --profile ${AWS_MFA_PROFILE} configure set aws_secret_access_key "${_AWS_SECRET_ACCESS_KEY}" 
-    aws --profile ${AWS_MFA_PROFILE} configure set aws_session_token "${_AWS_SESSION_TOKEN}"
-
-    AWS_PROFILE=${AWS_MFA_PROFILE}    
-
-    # setopt noksh_arrays
-}
-
+AWS_PROFILE=${AWS_MFA_PROFILE}    
