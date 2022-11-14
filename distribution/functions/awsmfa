@@ -29,12 +29,12 @@ do
         if [[ ${AWS_PROFILE} == *"+mfa" ]]
         then
             
-            echo aws --profile ${AWS_PROFILE} configure set aws_access_key_id "REMOVED" 
-            echo aws --profile ${AWS_PROFILE} configure set aws_secret_access_key "REMOVED" 
-            echo aws --profile ${AWS_PROFILE} configure set aws_session_token "REMOVED"
+            aws --profile ${AWS_PROFILE} configure set aws_access_key_id "REMOVED" 
+            aws --profile ${AWS_PROFILE} configure set aws_secret_access_key "REMOVED" 
+            aws --profile ${AWS_PROFILE} configure set aws_session_token "REMOVED"
 
-            AWS_PROFILE = ${AWS_PROFILE%+mfa}
-
+            AWS_PROFILE=${AWS_PROFILE%+mfa}
+            return 0
         else
             echo "You can only remove +mfa profiles"
             return 1    
