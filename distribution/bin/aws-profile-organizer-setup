@@ -16,6 +16,7 @@ else
 	_log "Setting up ${ZSH_RC} for use with easytocloud aws profile organizer"
 
 	if cat >> ${ZSH_RC} <<EOF
+
 ${TOKEN}
 source /usr/local/bin/aws-profile-organizer-rc
 EOF

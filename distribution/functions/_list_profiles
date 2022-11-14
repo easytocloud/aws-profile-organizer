@@ -1,5 +1,5 @@
 _list_profiles()
 {
-    test -f ${AWS_CONFIG_FILE:-~/.aws/config} && grep -h '\[profile .*\]' ${AWS_CONFIG_FILE:-~/.aws/config} |  sed 's/profile //' | tr -d '[]'
+    aws configure list-profiles
 }
 

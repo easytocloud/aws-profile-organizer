@@ -50,20 +50,21 @@ awsenv()
 						return 1
 					fi
 					;;
+		'--get')	readlink ~/.aws/config | rev | cut -f2 -d '/' | rev
+					return 0
+					;;
 		*)			export AWS_ENV=${1}
 					;;
 		esac
 
 	fi
 
-	# setup links to AWS_ENV and select first profile
+	# setup links to AWS_ENV and select first profile from ~/.aws/config
 
 	pushd ~/.aws 2>/dev/null 1>&2
       rm config credentials
 	  ln -s aws-envs/${AWS_ENV}/config ~/.aws/config
 	  ln -s aws-envs/${AWS_ENV}/credentials ~/.aws/credentials
     popd 2>/dev/null 1>&2
-	export AWS_PROFILE=$( _list_profiles |  sed -n 1p ) 
-
-	
+	export AWS_PROFILE=$( _list_profiles |  sed -n 1p )
 }
