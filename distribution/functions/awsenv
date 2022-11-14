@@ -61,10 +61,10 @@ awsenv()
 
 	# setup links to AWS_ENV and select first profile from ~/.aws/config
 
-	pushd ~/.aws 2>/dev/null 1>&2
+	( cd ~/.aws 
       rm config credentials
 	  ln -s aws-envs/${AWS_ENV}/config ~/.aws/config
 	  ln -s aws-envs/${AWS_ENV}/credentials ~/.aws/credentials
-    popd 2>/dev/null 1>&2
+    )
 	export AWS_PROFILE=$( aws configure list-profiles |  sed -n 1p )
 }
