@@ -1,5 +1,0 @@
-_list_profiles()
-{
-    aws configure list-profiles
-}
-

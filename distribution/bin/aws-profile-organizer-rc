@@ -19,6 +19,6 @@ then
 	awsprofile $(cat ~/.awsdefaultprofile)
 else
 	_log "No ~/.awsdefaultprofile -- using first profile" >&2
-	export AWS_PROFILE=$( _list_profiles |  sed -n 1p )
+	export AWS_PROFILE=$( aws configure list-profiles |  sed -n 1p )
 fi
 

@@ -22,7 +22,7 @@ source /usr/local/bin/aws-profile-organizer-rc
 EOF
 fi
 
-autoload -U awsprofile awsenv _list_profiles
+autoload -U awsprofile awsenv
 
 if test -d ~/.aws/aws-envs -o -L ~/.aws/config -o -L ~/.aws/credentials
 then

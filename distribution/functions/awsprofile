@@ -9,14 +9,14 @@ awsprofile()
   then # interactive
     if test -t 0
     then
-      local max=$(_list_profiles | wc -l | tr -d ' ')
+      local max=$(aws configure list-profiles | wc -l | tr -d ' ')
 
-      _list_profiles | awk '{ print NR, $0 }' | column 
+      aws configure list-profiles | awk '{ print NR, $0 }' | column 
 
       echo -n "Enter profile number [1-${max}]> "; read n
       if test -n "$n" -a "$n" -gt 0 -a "$n" -le $max 2>/dev/null
       then
-        export AWS_PROFILE=$( _list_profiles |  sed -n ${n}p )
+        export AWS_PROFILE=$( aws configure list-profiles |  sed -n ${n}p )
       else
         _error "Value out of range, profile remains $AWS_PROFILE"
       fi

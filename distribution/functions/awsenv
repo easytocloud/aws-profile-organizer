@@ -66,5 +66,5 @@ awsenv()
 	  ln -s aws-envs/${AWS_ENV}/config ~/.aws/config
 	  ln -s aws-envs/${AWS_ENV}/credentials ~/.aws/credentials
     popd 2>/dev/null 1>&2
-	export AWS_PROFILE=$( _list_profiles |  sed -n 1p )
+	export AWS_PROFILE=$( aws configure list-profiles |  sed -n 1p )
 }
