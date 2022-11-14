@@ -1,0 +1,7 @@
+#! /usr/bin/env zsh
+#
+# set current values for AWS_ENV and AWS_PROFILE in defaults
+#
+#
+echo "${1:-$(awsenv --get)}" > ~/.awsdefaultenv
+echo "${2:-${AWS_PROFILE}}" > ~/.awsdefaultprofile
