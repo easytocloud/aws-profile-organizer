@@ -1,6 +1,6 @@
 # --- awsprofile
 #
-# 	Select a profile from your ~/.aws/config and set AWS_PROFILE accordingly
+# 	Select a profile from your configuration and set AWS_PROFILE accordingly
 
 awsprofile() 
 {
@@ -25,7 +25,7 @@ awsprofile()
       return 1
     fi
   else # process arg
-    if grep -q "^\[profile $1\]" ~/.aws/config 2> /dev/null
+    if aws configure list-profiles | grep -wq "${1}" 
     then
       export AWS_PROFILE=$1
     else
@@ -33,6 +33,5 @@ awsprofile()
       return 2
     fi
   fi  
-
 }
 
