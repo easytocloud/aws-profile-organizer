@@ -29,7 +29,7 @@ do
         if [[ ${AWS_PROFILE} == *"+mfa" ]]
         then
             
-            echo aws --profile ${AWS_PROFILE} configure set aws_access_key_id "REMOVED}" 
+            echo aws --profile ${AWS_PROFILE} configure set aws_access_key_id "REMOVED" 
             echo aws --profile ${AWS_PROFILE} configure set aws_secret_access_key "REMOVED" 
             echo aws --profile ${AWS_PROFILE} configure set aws_session_token "REMOVED"
 
