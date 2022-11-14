@@ -20,9 +20,12 @@ brew install aws-profile-organizer
 ```
 
 ## Environments
-aws-profile-organizer organizes your profiles in environments.
 
+> aws-profile-organizer organizes your profiles in environments.
+
+An environment is a collection of profiles that can be easily organized.
 For that aws-profile-organizer intoduces the ``awsenv`` and ``awsprofile`` commands. 
+These commands are inplemented as zsh functions as they operate on environment variables in your current shell.
 
 ### awsenv
 When invoked with a the name of an environment as argument, this environment becomes active. 
@@ -46,17 +49,21 @@ $ awsenv --init blue
 2022/11/12-13:43 - environment blue created and active
 ```
 
-To switch between profiles in an environment, use awsprofile.
-To manage profiles within an environment, use standard aws cli's `aws configure`.
+To switch between profiles in an environment, use awsprofile. 
 
-**NOTE** When activating an environment, awsenv creates symbolic links from the ~/.aws/credentials and ~/.aws/config files to the corresponding files in the environment of choice.
+> A profile can represent an IAM user or an IAM role.
+
+To manage profiles within an environment, use standard aws cli's `aws configure` and/or edit the credentials and config file.
+
+> **NOTE** When activating an environment, awsenv creates symbolic links from the ~/.aws/credentials and ~/.aws/config files to the corresponding files in the environment of choice.
 Environments are kept in ~/.aws/aws-envs in directories named after the environment.
 
-You should probablydisplay the current environment and profile in your prompt. 
+You should probably display the current environment and profile in your prompt. 
 If you already use zsh and oh-my-zsh, why not have a look at our agnoster-based [oh-my-easytocloud](https://github.com/easytocloud/oh-my-easytocloud) prompt.
 
 ## Profile selection
-AWS CLI uses two files in ~/.aws to store profiles. Profiles can be used on the commanline explicitely, like:
+AWS CLI uses two files in ~/.aws to store profile definitions. 
+Profiles can be used on the commanline explicitely, like:
 
 ```
 $ aws s3 ls --profile sandbox
@@ -69,7 +76,8 @@ $ export AWS_PROFILE=sandbox
 $ aws s3 ls
 ```
 
-In the examples above, sandbox is a reference to a profile that is configured in ~/.aws. See AWS cli documentation for more information about profiles.
+In both examples above, sandbox is a reference to a profile that is configured in ~/.aws. 
+See AWS cli documentation for more information about profiles.
 
 ### awsprofile
 When a valid profile name is passed as argument, the AWS_PROFILE variable is set quietly.
@@ -108,15 +116,16 @@ aws-profile-organizer doesn't change this standard behaviour.
 The two files that make a profile are
 
 ### ~/.aws/credentials 
-The credentials file contains long-term credentials known as the Access Key Id and Secret Acces Key, which can be seen as the username/password for CLI operations.
-Storing AK/SK in this credentials file is against best practice, but necessary in some cases - notably before version 2 of the CLI.
-With CLI version 2, have a look at `aws sso login` as an alternative.
-
+The credentials file contains long-term credentials known as the Access Key Id and Secret Acces Key (AK/SK) for an IAM *user*, which can be seen as the username/password for CLI operations.
 ~~~
 [sandbox]
 aws_access_key_id=AKIAIOSFODNN7EXAMPLE
 aws_secret_access_key=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 ~~~
+
+> NOTE: Storing AK/SK in this credentials file is against best (security) practice, but necessary in some cases - notably before version 2 of the CLI.
+With CLI version 2, have a look at `aws sso login` as an alternative.
+
 
 ### ~/.aws/config
 The config file holds all other-than-credentials information about a profile, the likes of a region, default output etc.
@@ -125,7 +134,24 @@ The config file holds all other-than-credentials information about a profile, th
 [profile sandbox]
 region=eu-west-1
 output=yaml
+
+[profile sandbox-us]
+region=us-east-1
+source_profile=sandbox
+
+[profile admin-role]
+source_profile=sandbox
+role_arn=arn:aws:iam:123123123123::role/admin-role
 ~~~
+
+The config file above describes 3 profiles, all referencing the same (IAM User) profile in the credentials file. 
+What makes `admin-role` a role is that it has a role arn in its definition.
+
+> TIP: Store IAM user credentials in the credentials file and use the config file to store all other config items and roles that can be assumed using the credentials from the credentials file.
+
+Remember, a role doesn't have credentials itself; it references an IAM user as per source_profile. It is the IAM user that **assumes** the role. 
+Both the user (with AK/SK credentials) and the role it assumes have to be configured for the CLI to use the role.
+Any config block in the config file either has a name that also appears in the credentials file (implicit reference) or explicitely references a source profile in the credentials file.
 
 ## CLI vs SDK
 
