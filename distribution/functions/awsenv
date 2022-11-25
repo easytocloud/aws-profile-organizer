@@ -6,14 +6,22 @@
 
 awsenv()
 {
-	# setup completed?
-
-    if ! test -L ~/.aws/credentials || ! test -L ~/.aws/config
+	
+	# check for existing ~/.aws/aws-envs to verify completed setup
+	
+	if ! test -d ~/.aws/aws-envs
     then
-		_error "[awsenv] Your credentials- or config- file is not a symbolic link. Please run aws-profile-organizer-setup"
+		_error "[awsenv] Your ~/.aws/awsenvs in not setup. Please run aws-profile-organizer-setup"
         return 1
     fi
 
+	# determine method of configuration 
+	# environment: use AWS_CONFIG_FILE and AWS_SHARED_CREDENTIALS_FILE
+	# link: use ~/.aws/config and ~/.aws/credentials linked to ~/.aws/aws-envs/<environment>
+
+	method = "environment"
+    [[ -z "$AWS_CONFIG_FILE"]] && method="link"
+    
 	# interactive mode
 
 	if [ $# -eq 0 ] 
@@ -38,7 +46,7 @@ awsenv()
 	else
 	
 		case "${1}" in
-		'--init') if ! test -z "${2}"
+		'--init') 	if ! test -z "${2}"
 					then
 						mkdir -p ~"/.aws/aws-envs/${2}"
 						touch ~"/.aws/aws-envs/${2}/config"
@@ -50,21 +58,39 @@ awsenv()
 						return 1
 					fi
 					;;
-		'--get')	readlink ~/.aws/config | rev | cut -f2 -d '/' | rev
+		'--get')	echo ${AWS_CONFIG_FILE:-$(readlink ~/.aws/config)} | rev | cut -f2 -d '/' | rev
 					return 0
 					;;
-		*)			export AWS_ENV=${1}
+		*)			if [[ ! test -d ~"/.aws/aws-envs/${1}" ]] 
+					then
+						_error "awsenv: ${1} - No such environment"
+					fi
+					export AWS_ENV="${1}"
 					;;
 		esac
 
 	fi
 
-	# setup links to AWS_ENV and select first profile from ~/.aws/config
+	# setup links to AWS_ENV or change AWS_CONFIG_FILE/AWS_SHARED_CREDENTIALS_FILE
+	# and select 'default' or first profile from configure list-profiles
 
-	( cd ~/.aws 
-      rm config credentials
-	  ln -s aws-envs/${AWS_ENV}/config ~/.aws/config
-	  ln -s aws-envs/${AWS_ENV}/credentials ~/.aws/credentials
-    )
-	export AWS_PROFILE=$( aws configure list-profiles |  sed -n 1p )
+	if [[ "$method" == "link"]]
+	then
+		( cd ~/.aws 
+		rm config credentials
+		ln -s aws-envs/${AWS_ENV}/config ~/.aws/config
+		ln -s aws-envs/${AWS_ENV}/credentials ~/.aws/credentials
+	    )
+	else
+		export AWS_CONFIG_FILE=~"/.aws/aws-envs/${AWS_ENV}/config"
+		export AWS_SHARED_CREDENTIALS_FILE=~"/.aws/aws-envs/${AWS_ENV}/credentials"
+	fi
+
+	if configure list-profiles | grep -wq 'default'
+	then
+		export AWS_PROFILE=default
+	else
+		export AWS_PROFILE=$( aws configure list-profiles |  sed -n 1p )
+	fi
+	unset AWS_ENV
 }

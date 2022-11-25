@@ -11,14 +11,18 @@ then
 	awsenv $(cat ~/.awsdefaultenv)
 else
 	_debug "No ~/.awsdefaultenv -- using current ~/.aws/[config | credentials]"
-	export AWS_ENV=$(awsenv --get)
 fi
 
 if test -f ~/.awsdefaultprofile
 then
 	awsprofile $(cat ~/.awsdefaultprofile)
 else
-	_debug "No ~/.awsdefaultprofile -- using first profile" 
-	export AWS_PROFILE=$( aws configure list-profiles |  sed -n 1p )
+	if aws configure list-profiles | grep -wq 'default'
+	then
+		export AWS_PROFILE=default
+	else
+		export AWS_PROFILE=$( aws configure list-profiles |  sed -n 1p )
+	fi
+	_debug "No ~/.awsdefaultprofile -- using ${AWS_PROFILE}" 
 fi
 
