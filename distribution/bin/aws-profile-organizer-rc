@@ -21,7 +21,7 @@ else
 	then
 		export AWS_PROFILE=default
 	else
-		export AWS_PROFILE=$( aws configure list-profiles |  sed -n 1p )
+		export AWS_PROFILE=$( aws configure list-profiles |  head -n1 )
 	fi
 	_debug "No ~/.awsdefaultprofile -- using ${AWS_PROFILE}" 
 fi

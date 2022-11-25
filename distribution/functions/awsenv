@@ -22,15 +22,51 @@ awsenv()
 	method='environment'
     test -z "$AWS_CONFIG_FILE"  && method='link'
     
-
+	while (( $# != 0 ))
+	do
+		case "${1}" in
+		'--init') 	if ! test -z "${2}"
+					then
+						mkdir -p ~"/.aws/aws-envs/${2}"
+						touch ~"/.aws/aws-envs/${2}/config"
+						touch ~"/.aws/aws-envs/${2}/credentials"
+						export AWS_ENV="${2}"
+						_log "environment ${2} created and activated"
+						break
+					else
+						_error "awsenv --init requires parameter"
+						return 1
+					fi
+					;;
+		'--get')	echo ${AWS_CONFIG_FILE:-$(readlink ~/.aws/config)} | rev | cut -f2 -d '/' | rev
+					return 0
+					;;
+		'--link' | '-l' )
+					method='link'
+					
+					;;
+		'--env*' | '-e' )
+					method='environment'
+					;;
+		*)			if  ! test -d ~"/.aws/aws-envs/${1}" 
+					then
+						_error "awsenv: ${1} - No such environment"
+						return 1
+					fi
+					export AWS_ENV="${1}"
+					;;
+		esac
+		shift
+	done
+	
 	# interactive mode
 
-	if [ $# -eq 0 ] 
+	if test -z "$AWS_ENV" && [ $# -eq 0 ] 
 	then
 	    if test -t 0
 	    then
 			max=$( ls ~/.aws/aws-envs | wc -l | tr -d ' ' )
-			ls ~/.aws/aws-envs | awk '{ print NR, $0 }' | column 
+			ls ~/.aws/aws-envs | cat -n | column 
 			echo -n "Enter environment number [1-${max}]> "; read n
 			if test -n "$n" -a "$n" -gt 0 -a "$n" -le $max 2>/dev/null
 			then
@@ -44,35 +80,9 @@ awsenv()
 			_error "Usage: awsenv [environment]  -- without parameter interactive mode reads from tty"
 	        return 1
 	    fi
-	else
-	
-		case "${1}" in
-		'--init') 	if ! test -z "${2}"
-					then
-						mkdir -p ~"/.aws/aws-envs/${2}"
-						touch ~"/.aws/aws-envs/${2}/config"
-						touch ~"/.aws/aws-envs/${2}/credentials"
-						export AWS_ENV="${2}"
-						_log "environment ${2} created and active"
-					else
-						_error "awsenv --init requires parameter"
-						return 1
-					fi
-					;;
-		'--get')	echo ${AWS_CONFIG_FILE:-$(readlink ~/.aws/config)} | rev | cut -f2 -d '/' | rev
-					return 0
-					;;
-		*)			if  ! test -d ~"/.aws/aws-envs/${1}" 
-					then
-						_error "awsenv: ${1} - No such environment"
-					fi
-					export AWS_ENV="${1}"
-					;;
-		esac
-
 	fi
 
-	# setup links to AWS_ENV or change AWS_CONFIG_FILE/AWS_SHARED_CREDENTIALS_FILE
+	# setup links (method=link) to AWS_ENV or change AWS_CONFIG_FILE/AWS_SHARED_CREDENTIALS_FILE (method=env)
 	# and select 'default' or first profile from configure list-profiles
 
 	if [[ "$method" == "link" ]]
@@ -82,6 +92,8 @@ awsenv()
 		ln -s aws-envs/${AWS_ENV}/config ~/.aws/config
 		ln -s aws-envs/${AWS_ENV}/credentials ~/.aws/credentials
 	    )
+		unset AWS_CONFIG_FILE
+		unset AWS_SHARED_CREDENTIALS_FILE
 	else
 		export AWS_CONFIG_FILE=~"/.aws/aws-envs/${AWS_ENV}/config"
 		export AWS_SHARED_CREDENTIALS_FILE=~"/.aws/aws-envs/${AWS_ENV}/credentials"
@@ -94,6 +106,6 @@ awsenv()
 	then
 		export AWS_PROFILE=default
 	else
-		export AWS_PROFILE=$( aws configure list-profiles |  sed -n 1p )
+		export AWS_PROFILE=$( aws configure list-profiles |  head -n1 )
 	fi
 }
