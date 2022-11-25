@@ -19,9 +19,10 @@ awsenv()
 	# environment: use AWS_CONFIG_FILE and AWS_SHARED_CREDENTIALS_FILE
 	# link: use ~/.aws/config and ~/.aws/credentials linked to ~/.aws/aws-envs/<environment>
 
-	method = "environment"
-    [[ -z "$AWS_CONFIG_FILE"]] && method="link"
+	method='environment'
+    test -z "$AWS_CONFIG_FILE"  && method='link'
     
+
 	# interactive mode
 
 	if [ $# -eq 0 ] 
@@ -61,7 +62,7 @@ awsenv()
 		'--get')	echo ${AWS_CONFIG_FILE:-$(readlink ~/.aws/config)} | rev | cut -f2 -d '/' | rev
 					return 0
 					;;
-		*)			if [[ ! test -d ~"/.aws/aws-envs/${1}" ]] 
+		*)			if  ! test -d ~"/.aws/aws-envs/${1}" 
 					then
 						_error "awsenv: ${1} - No such environment"
 					fi
@@ -74,7 +75,7 @@ awsenv()
 	# setup links to AWS_ENV or change AWS_CONFIG_FILE/AWS_SHARED_CREDENTIALS_FILE
 	# and select 'default' or first profile from configure list-profiles
 
-	if [[ "$method" == "link"]]
+	if [[ "$method" == "link" ]]
 	then
 		( cd ~/.aws 
 		rm config credentials
@@ -85,12 +86,14 @@ awsenv()
 		export AWS_CONFIG_FILE=~"/.aws/aws-envs/${AWS_ENV}/config"
 		export AWS_SHARED_CREDENTIALS_FILE=~"/.aws/aws-envs/${AWS_ENV}/credentials"
 	fi
+	unset AWS_ENV
 
-	if configure list-profiles | grep -wq 'default'
+	# activate either default profile or first in list
+
+	if aws configure list-profiles | grep -wq 'default'
 	then
 		export AWS_PROFILE=default
 	else
 		export AWS_PROFILE=$( aws configure list-profiles |  sed -n 1p )
 	fi
-	unset AWS_ENV
 }
