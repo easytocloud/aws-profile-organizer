@@ -106,6 +106,7 @@ awsenv()
 	then
 		export AWS_PROFILE=default
 	else
-		export AWS_PROFILE=$( aws configure list-profiles |  head -n1 )
+		# this creates real nasty errors when many profiles exist => ignore &2
+		export AWS_PROFILE=$( aws configure list-profiles 2> /dev/null |  head -n1 )
 	fi
 }
