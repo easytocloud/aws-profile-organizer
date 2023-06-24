@@ -1,7 +1,9 @@
 # Makefile
 
-SITEFUN=/usr/local/share/zsh/site-functions
-LOCALBIN=/usr/local/bin
+HOMEBREW_PREFIX ?= /usr/local
+
+SITEFUN=$(HOMEBREW_PREFIX)/share/zsh/site-functions
+LOCALBIN=$(HOMEBREW_PREFIX)/bin
 
 install: 
 	test -d ${SITEFUN} || mkdir ${SITEFUN}

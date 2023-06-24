@@ -18,7 +18,7 @@ else
 	cat >> ${ZSH_RC} <<EOF
 
 ${TOKEN}
-source /usr/local/bin/aws-profile-organizer-rc
+source \${HOMEBREW_PREFIX:-/usr/local}/bin/aws-profile-organizer-rc
 EOF
 fi
 
