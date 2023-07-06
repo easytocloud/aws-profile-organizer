@@ -52,6 +52,8 @@ jobs:
             zsh_function.install "distribution/functions/_debug"
             zsh_function.install "distribution/functions/_die"
 
+            system "echo # added on $(date) >> ~/.zshenv"
+
           # Custom test command for your formula so you can run `brew test`.
           # Optional - string.
           # test: 'assert_match("Please set AWS_PROFILE before calling akskrotate", shell_output("akskrotate 2>&1", 1))'
