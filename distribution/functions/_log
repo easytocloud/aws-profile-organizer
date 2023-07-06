@@ -1,8 +1,0 @@
-# --- log
-#
-#       write timestemped log message with parameter(s)
-#
-_log()
-{
-    echo "$(date ${LOGDATEFORMAT}) - $@"
-}

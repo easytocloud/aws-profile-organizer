@@ -35,6 +35,7 @@ jobs:
           # Optional - multiline string.
           depends_on: |
             "bash" => :build
+            "easytocloud/zsh_functions" 
 
           # Custom install command for your formula.
           # Required - string.
@@ -46,11 +47,6 @@ jobs:
             zsh_function.install "distribution/functions/awsenv"
             zsh_function.install "distribution/functions/awsprofile"
             zsh_function.install "distribution/functions/awsmfa"
-
-            zsh_function.install "distribution/functions/_log"
-            zsh_function.install "distribution/functions/_error"
-            zsh_function.install "distribution/functions/_debug"
-            zsh_function.install "distribution/functions/_die"
 
             system "./postinstall"
 
