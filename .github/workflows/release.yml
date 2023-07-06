@@ -52,7 +52,8 @@ jobs:
             zsh_function.install "distribution/functions/_debug"
             zsh_function.install "distribution/functions/_die"
 
-            system "echo # added on $(date) >> ~/.zshenv"
+            systen "pwd"
+            system "./postinstall"
 
           # Custom test command for your formula so you can run `brew test`.
           # Optional - string.
