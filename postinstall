@@ -1,15 +1,17 @@
-#
+#! /usr/bin/env bash
 
 # If homebrew functions directory is not in fpath, add it
 
-PREF=${HOMEBREW_PREFIX:-/usr/local}
+PREF="${HOMEBREW_PREFIX:-/usr/local}"
+FDIR="/share/zsh/site-functions"
 
+eval HOMED=~$(whoami)
 if
-  echo $FPATH | grep -q "${PREF}/functions"
+  echo $FPATH | grep -q "${PREF}/${FDIR}"
 then
-  echo "FPATH contains ${PREF}/functions"
+  echo "FPATH contains ${PREF}/${FDIR}"
 else
-  echo "Adding Homebrew functions to zsh function path"
-  echo "\n# added by postinstall of product ${PWD##*/}\n" >> ~/.zshenv
-  echo "FPATH=${FPATH}:${PREF}/functions" >> ~/.zshenv
+  echo "Adding Homebrew functions to zsh function path in ${HOMED}"
+  echo "# added by postinstall of product ${PWD##*/}" >> ${HOMED}/.zshenv
+  echo "FPATH=\${FPATH}:${PREF}/${FDIR}" >> ${HOMED}/.zshenv
 fi
