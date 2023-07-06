@@ -1,0 +1,15 @@
+#
+
+# If homebrew functions directory is not in fpath, add it
+
+PREF=${HOMEBREW_PREFIX:-/usr/local}
+
+if
+  echo $FPATH | grep -q "${PREF}/functions"
+then
+  echo "FPATH contains ${PREF}/functions"
+else
+  echo "Adding Homebrew functions to zsh function path"
+  echo "\n# added by postinstall of product ${PWD##*/}\n" >> ~/.zshenv
+  echo "FPATH=${FPATH}:${PREF}/functions" >> ~/.zshenv
+fi
