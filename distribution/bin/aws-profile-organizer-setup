@@ -4,16 +4,16 @@ date
 
 ZSH_RC=~/.zshrc
 
-autoload -U _log _error _die
+autoload -U _ezlog _ezerror _ezdie 
 
 TOKEN='# AWS Profile Organizer (easytocloud)'
 
 if test -f ${ZSH_RC} && grep -q "${TOKEN}" ${ZSH_RC}
 then
-	_log "Your .zshrc already contains aws profile organizer modifications"
+	_ezlog "Your .zshrc already contains aws profile organizer modifications"
 else
 
-	_log "Setting up ${ZSH_RC} for use with easytocloud aws profile organizer"
+	_ezlog "Setting up ${ZSH_RC} for use with easytocloud aws profile organizer"
 
 	cat >> ${ZSH_RC} <<EOF
 
@@ -26,7 +26,7 @@ autoload -U awsprofile awsenv
 
 if test -d ~/.aws/aws-envs -o -L ~/.aws/config -o -L ~/.aws/credentials
 then
-	_die "You already have an aws-envs directory or your config/credentials files are symlinks"
+	_ezdie "You already have an aws-envs directory or your config/credentials files are symlinks"
 fi
 
 dpn=default
@@ -34,7 +34,7 @@ dpn=default
 echo -n "Please enter default environment name or ENTER for current value [${dpn}]: " && read -r a
 dpn="${a:-${dpn}}"
 
-_log "Moving your current settings into awsenv ${dpn}"
+_ezlog "Moving your current settings into awsenv ${dpn}"
 
 mkdir -p ~/.aws/aws-envs/"${dpn}"
 
@@ -43,13 +43,13 @@ test -f ~/.aws/credentials && mv ~/.aws/credentials ~"/.aws/aws-envs/${dpn}" && 
 
 if test -f ~/.awsdefaultenv
 then
-   _log "Your login default environment is already configured [$(cat ~/.awsdefaultenv)]"
+   _ezlog "Your login default environment is already configured [$(cat ~/.awsdefaultenv)]"
 else
-   _log "Setting up ~/.awsdefaultenv to default to ${dpn}"
+   _ezlog "Setting up ~/.awsdefaultenv to default to ${dpn}"
    echo "${dpn}" > ~/.awsdefaultenv
 fi
 
-_log "Setting your AWS_ENV to ${dpn}"
+_ezlog "Setting your AWS_ENV to ${dpn}"
 awsenv "${dpn}"
 
-_log "Setup completed"
+_ezlog "Setup completed"

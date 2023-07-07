@@ -2,6 +2,8 @@
 #
 # 	Select a profile from your configuration and set AWS_PROFILE accordingly
 
+autoload -Uz _ezerror _ezlog _ezdebug _ezdie
+
 awsprofile() 
 {
 
@@ -18,10 +20,10 @@ awsprofile()
       then
         export AWS_PROFILE=$( aws configure list-profiles |  sed -n ${n}p )
       else
-        _error "Profile remains $AWS_PROFILE"
+        _ezerror "Profile remains $AWS_PROFILE"
       fi
     else
-      _error "Usage: $0 [profile]  -- without parameter interactive mode reads from tty"
+      _ezerror "Usage: $0 [profile]  -- without parameter interactive mode reads from tty"
       return 1
     fi
   else # process arg
@@ -29,7 +31,7 @@ awsprofile()
     then
       export AWS_PROFILE="$1"
     else
-      _error "[$1]: No such profile."
+      _ezerror "[$1]: No such profile."
       return 2
     fi
   fi  

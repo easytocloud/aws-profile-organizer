@@ -21,6 +21,7 @@
 # after awsmfa the AWS_PROFILE variable will reference the temporary profile
 # 
 
+autoload -Uz _ezerror _ezlog _ezdebug _ezdie
 
 while [[ ${1} == "--"* ]]
 do
@@ -51,7 +52,7 @@ local ARN_OF_MFA=$(aws configure get ${AWS_USER_PROFILE}.mfa_serial)
 
 if test -z ${ARN_OF_MFA}
 then
-    _error "Profile ${AWS_USER_PROFILE} not referencing mfa_serial in ~/.aws/credentials"
+    _ezerror "Profile ${AWS_USER_PROFILE} not referencing mfa_serial in ~/.aws/credentials"
     return 1
 fi
 
@@ -61,7 +62,7 @@ then
     then
         echo -n "Enter MFA Token value: " && read mfa
     else
-        error "Usage: $0 token_value"
+        _ezerror "Usage: $0 token_value"
         return 1
     fi
 fi
@@ -70,7 +71,7 @@ local MFA_VALUE=${1:-$mfa}
 
 local DURATION=3600
 
-_debug $ARN_OF_MFA $MFA_VALUE
+_ezdebug $ARN_OF_MFA $MFA_VALUE
 
 read _AWS_ACCESS_KEY_ID _AWS_SECRET_ACCESS_KEY _AWS_SESSION_TOKEN <<< $( \
 aws --profile ${AWS_USER_PROFILE} sts get-session-token \
@@ -82,7 +83,7 @@ aws --profile ${AWS_USER_PROFILE} sts get-session-token \
 
 if [[ -z "${_AWS_ACCESS_KEY_ID}" ]]
 then
-    _error "awsmfa: getting session token failed"
+    _ezerror "awsmfa: getting session token failed"
     return
 fi
 

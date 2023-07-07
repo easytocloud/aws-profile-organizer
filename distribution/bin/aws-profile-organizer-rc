@@ -2,7 +2,7 @@
 LOGDATEFORMAT='+%Y/%m/%d-%H:%M'
 __debug=${__debug:-false}
 
-autoload -U awsenv awsprofile awsmfa _debug _log _error _die 
+autoload -U awsenv awsprofile awsmfa _ezdebug _ezlog _ezerror _ezdie 
 
 export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
 
@@ -10,7 +10,7 @@ if test -f ~/.awsdefaultenv
 then
 	awsenv $(cat ~/.awsdefaultenv)
 else
-	_debug "No ~/.awsdefaultenv -- using current ~/.aws/[config | credentials]"
+	_ezdebug "No ~/.awsdefaultenv -- using current ~/.aws/[config | credentials]"
 fi
 
 if test -f ~/.awsdefaultprofile
@@ -23,6 +23,6 @@ else
 	else
 		export AWS_PROFILE=$( aws configure list-profiles |  uniq | head -n1 )
 	fi
-	_debug "No ~/.awsdefaultprofile -- using ${AWS_PROFILE}" 
+	_ezdebug "No ~/.awsdefaultprofile -- using ${AWS_PROFILE}" 
 fi
 

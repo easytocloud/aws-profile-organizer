@@ -4,6 +4,8 @@
 #
 #	without parameters it offers a menu with available envs to choose from, or pass requested env as parameter
 
+autoload -Uz _ezerror _ezlog _ezdebug _ezdie
+
 awsenv()
 {
 	
