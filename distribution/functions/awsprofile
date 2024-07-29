@@ -37,3 +37,6 @@ awsprofile()
   fi  
 }
 
+autoload -Uz awsprofile
+
+awsprofile
