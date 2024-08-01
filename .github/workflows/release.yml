@@ -2,15 +2,15 @@
 # Start Homebrew Releaser when a new tag is created
 on:
   push:
-    tags:
-      - "*"
+    branches:
+      - "main"
 
 jobs:
   homebrew-releaser:
     runs-on: ubuntu-latest
     name: homebrew-releaser
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Configure 1Password Service Account
         uses: 1password/load-secrets-action/configure@v1
