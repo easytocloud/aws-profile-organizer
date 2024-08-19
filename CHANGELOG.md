@@ -1,3 +1,10 @@
+## [0.4.8](https://github.com/easytocloud/aws-profile-organizer/compare/v0.4.7...v0.4.8) (2024-08-19)
+
+
+### Bug Fixes
+
+* -n to undo -e added for awsenv ([c6e0a6e](https://github.com/easytocloud/aws-profile-organizer/commit/c6e0a6eff7c6f7a028b68459666abfd53fab8025))
+
 ## [0.4.7](https://github.com/easytocloud/aws-profile-organizer/compare/v0.4.6...v0.4.7) (2024-08-19)
 
 
