@@ -1,3 +1,10 @@
+## [0.4.2](https://github.com/easytocloud/aws-profile-organizer/compare/v0.4.1...v0.4.2) (2024-08-19)
+
+
+### Bug Fixes
+
+* modifed workflow for autocompleter ([5eceb69](https://github.com/easytocloud/aws-profile-organizer/commit/5eceb69cf231542b7105f5cecdbb460459ed85ab))
+
 ## [0.4.1](https://github.com/easytocloud/aws-profile-organizer/compare/v0.4.0...v0.4.1) (2024-08-19)
 
 
