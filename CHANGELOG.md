@@ -1,3 +1,10 @@
+## [0.4.6](https://github.com/easytocloud/aws-profile-organizer/compare/v0.4.5...v0.4.6) (2024-08-19)
+
+
+### Bug Fixes
+
+* get/current ([83026d4](https://github.com/easytocloud/aws-profile-organizer/commit/83026d461cb584b23d6b6d18117dde18d59dea8d))
+
 ## [0.4.5](https://github.com/easytocloud/aws-profile-organizer/compare/v0.4.4...v0.4.5) (2024-08-19)
 
 
