@@ -1,3 +1,15 @@
+# [0.4.0](https://github.com/easytocloud/aws-profile-organizer/compare/v0.3.11...v0.4.0) (2024-08-19)
+
+
+### Bug Fixes
+
+* error that caused pipeline message ([1b2064e](https://github.com/easytocloud/aws-profile-organizer/commit/1b2064e5120dd3886025c5496859c02bf57d016e))
+
+
+### Features
+
+* added completions for bash and zsh ([22f4862](https://github.com/easytocloud/aws-profile-organizer/commit/22f4862366ea574cfdc0cab7e75ca5eb736851f6))
+
 ## [0.3.11](https://github.com/easytocloud/aws-profile-organizer/compare/v0.3.10...v0.3.11) (2024-08-01)
 
 
