@@ -40,7 +40,7 @@ awsenv()
 						return 1
 					fi
 					;;
-		'--list')	ls ~/.aws/aws-envs'	| column
+		'--list')	ls ~/.aws/aws-envs	| column
 					return 0
 					;;	
 		'--get')
