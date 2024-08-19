@@ -72,6 +72,8 @@ jobs:
             zsh_function.install "distribution/functions/awsprofile"
             zsh_function.install "distribution/functions/awsmfa"
 
+            bash_completion.install "completions/aws-profile-organizer-completion.bash"
+            zsh_completion.install "completions/aws-profile-organizer-completion.zsh"
            
           # Custom test command for your formula so you can run `brew test`.
           # Optional - string.
