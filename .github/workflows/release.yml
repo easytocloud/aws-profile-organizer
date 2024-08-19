@@ -62,8 +62,8 @@ jobs:
                 echo "Seting up aws-profile-organizer for Zsh"
                 source "#{zsh_function}/awsenv"
                 source "#{zsh_function}/awsprofile"
-                source "#{zsh_completion}/aws-profile-organizer-completion.zsh"
                 autoload -U compinit && compinit
+                source "#{zsh_completion}/aws-profile-organizer-completion.zsh"
               else
                 echo "Unsupported shell. Please use Bash or Zsh."
               fi
