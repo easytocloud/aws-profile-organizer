@@ -1,3 +1,10 @@
+## [0.4.9](https://github.com/easytocloud/aws-profile-organizer/compare/v0.4.8...v0.4.9) (2024-08-19)
+
+
+### Bug Fixes
+
+* fixed generated starter script ([11aee6f](https://github.com/easytocloud/aws-profile-organizer/commit/11aee6ffdf91958a8b115aecfeabef48735ae39f))
+
 ## [0.4.8](https://github.com/easytocloud/aws-profile-organizer/compare/v0.4.7...v0.4.8) (2024-08-19)
 
 
