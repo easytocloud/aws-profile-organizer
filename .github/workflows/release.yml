@@ -54,10 +54,12 @@ jobs:
             (bin/"aws-profile-organizer").write <<~EOS
               #!/bin/bash
               if [ -n "$BASH_VERSION" ]; then
+                echo "Seting up aws-profile-organizer for Bash"
                 source "#{zsh_function}/awsenv"
                 source "#{zsh_function}/awsprofile"
                 source "#{bash_completion}/aws-profile-organizer-completion.bash"
               elif [ -n "$ZSH_VERSION" ]; then
+                echo "Seting up aws-profile-organizer for Zsh"
                 source "#{zsh_function}/awsenv"
                 source "#{zsh_function}/awsprofile"
                 source "#{zsh_completion}/aws-profile-organizer-completion.zsh"
