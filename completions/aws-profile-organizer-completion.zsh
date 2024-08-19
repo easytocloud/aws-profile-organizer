@@ -22,12 +22,9 @@ _awsenv() {
 }
 
 _awsprofile() {
-    local current_env=$(cat ~/.awsdefaultenv 2>/dev/null)
     local -a opts
 
-    if [[ -f ~/.aws/aws-envs/${current_env}/config ]]; then
-        opts=($(grep '^\[' ~/.aws/aws-envs/${current_env}/config | tr -d '[]' | sed 's/^profile //'))
-    fi
+    opts=($(aws configure list-profiles))
 
     _describe -t profiles 'AWS profiles' opts
 }

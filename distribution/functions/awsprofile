@@ -18,7 +18,7 @@ awsprofile()
       echo -n "Enter profile number > "; read n
       if test -n "$n" -a "$n" -gt 0 -a "$n" -le $max 2>/dev/null
       then
-        export AWS_PROFILE=$( aws configure list-profiles |  sed -n ${n}p )
+        export AWS_PROFILE=$( aws configure list-profiles |  tee | sed -n ${n}p )
       else
         _ezerror "Profile remains $AWS_PROFILE"
       fi
@@ -27,7 +27,7 @@ awsprofile()
       return 1
     fi
   else # process arg
-    if aws configure list-profiles | grep -wq "${1}" 
+    if aws configure list-profiles | tee | grep -wq "${1}" 
     then
       export AWS_PROFILE="$1"
     else
