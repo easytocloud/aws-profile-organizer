@@ -33,10 +33,10 @@ awsenv()
 						touch ~"/.aws/aws-envs/${2}/config"
 						touch ~"/.aws/aws-envs/${2}/credentials"
 						export AWS_ENV="${2}"
-						_log "environment ${2} created and activated"
+						_ezlog "environment ${2} created and activated"
 						break
 					else
-						_error "awsenv --init requires parameter"
+						_ezerror "awsenv --init requires parameter"
 						return 1
 					fi
 					;;
@@ -48,15 +48,20 @@ awsenv()
 					return 0
 					;;
 		'--link' | '-l' )
-					method='link'
-					
+					method='link'				
 					;;
 		'--env*' | '-e' )
 					method='environment'
 					;;
+		'--noenv' | '-n' )
+					method='link'
+					unset AWS_CONFIG_FILE
+					unset AWS_SHARED_CREDENTIALS_FILE
+					return 0
+					;;
 		*)			if  ! test -d ~"/.aws/aws-envs/${1}" 
 					then
-						_error "awsenv: ${1} - No such environment"
+						_ezerror "awsenv: ${1} - No such environment"
 						return 1
 					fi
 					export AWS_ENV="${1}"
@@ -79,11 +84,11 @@ awsenv()
 				export AWS_ENV=$( ls ~/.aws/aws-envs | sed -n ${n}p )
 				# fall through
 			else
-				_error "Value out of range, environment remains $AWS_ENV"
+				_ezerror "Value out of range, environment remains $AWS_ENV"
 				return 1
 			fi
 	    else
-			_error "Usage: awsenv [environment]  -- without parameter interactive mode reads from tty"
+			_ezerror "Usage: awsenv [environment]  -- without parameter interactive mode reads from tty"
 	        return 1
 	    fi
 	fi
