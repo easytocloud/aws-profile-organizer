@@ -61,6 +61,7 @@ jobs:
                 source "#{zsh_function}/awsenv"
                 source "#{zsh_function}/awsprofile"
                 source "#{zsh_completion}/aws-profile-organizer-completion.zsh"
+                autoload -U compinit && compinit
               else
                 echo "Unsupported shell. Please use Bash or Zsh."
               fi

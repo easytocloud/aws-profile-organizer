@@ -39,4 +39,4 @@ awsprofile()
 
 autoload -Uz awsprofile
 
-awsprofile
+#awsprofile

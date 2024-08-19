@@ -118,4 +118,4 @@ awsenv()
 autoload -Uz awsenv
 
 # Call the function to ensure it runs the first time
-awsenv
+#awsenv
