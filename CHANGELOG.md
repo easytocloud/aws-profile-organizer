@@ -1,3 +1,10 @@
+## [0.4.5](https://github.com/easytocloud/aws-profile-organizer/compare/v0.4.4...v0.4.5) (2024-08-19)
+
+
+### Bug Fixes
+
+* quotation issue resolved ([dbb0749](https://github.com/easytocloud/aws-profile-organizer/commit/dbb07493daeb5420b4d41568df220c47d46598ea))
+
 ## [0.4.4](https://github.com/easytocloud/aws-profile-organizer/compare/v0.4.3...v0.4.4) (2024-08-19)
 
 
