@@ -1,3 +1,10 @@
+## [0.4.7](https://github.com/easytocloud/aws-profile-organizer/compare/v0.4.6...v0.4.7) (2024-08-19)
+
+
+### Bug Fixes
+
+* improved setup feedback ([355e951](https://github.com/easytocloud/aws-profile-organizer/commit/355e9516ff9d169fbee1866759f027271661f763))
+
 ## [0.4.6](https://github.com/easytocloud/aws-profile-organizer/compare/v0.4.5...v0.4.6) (2024-08-19)
 
 
