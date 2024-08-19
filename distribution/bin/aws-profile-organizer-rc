@@ -26,3 +26,4 @@ else
 	_ezdebug "No ~/.awsdefaultprofile -- using ${AWS_PROFILE}" 
 fi
 
+# to be added to your login workflow
