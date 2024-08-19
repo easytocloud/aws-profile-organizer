@@ -43,8 +43,8 @@ awsenv()
 		'--list')	ls ~/.aws/aws-envs	| column
 					return 0
 					;;	
-		'--get')
-		'--current')	echo ${AWS_CONFIG_FILE:-$(readlink ~/.aws/config)} | rev | cut -f2 -d '/' | rev
+		'--get' | '--current')	
+					echo ${AWS_CONFIG_FILE:-$(readlink ~/.aws/config)} | rev | cut -f2 -d '/' | rev
 					return 0
 					;;
 		'--link' | '-l' )
