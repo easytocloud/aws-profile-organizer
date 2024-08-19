@@ -15,10 +15,6 @@ jobs:
       - name: Configure 1Password Service Account
         uses: 1password/load-secrets-action/configure@v1
         with:
-          # Persist the 1Password Service Account Authorization token
-          # for next steps.
-          # Keep in mind that every single step in the job is now
-          # able to access the token.
           service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
 
       - name: Load GitHub credentials
@@ -28,7 +24,6 @@ jobs:
           export-env: false
         env:
           HOMEBREW_TAP_GITHUB_TOKEN: op://CICD/github-easytocloud-brew/credential 
-          ## to be used as ${{ steps.load-github-credentials.outputs.HOMEBREW_TAP_GITHUB_TOKEN  }}
 
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v4
@@ -38,31 +33,14 @@ jobs:
       - name: Release aws-profile-organizer to easytocloud/homebrew-tap
         uses: Justintime50/homebrew-releaser@v1
         with:
-          # The name of the homebrew tap to publish your formula to as it appears on GitHub.
-          # Required - strings.
           homebrew_owner: easytocloud
           homebrew_tap: homebrew-tap
-
-          # The name of the folder in your homebrew tap where formula will be committed to.
-          # Default is shown - string.
           formula_folder: Formula
-
-          # The GitHub Token (saved as a repo secret) that has `repo` permissions for the homebrew tap you want to release to.
-          # Required - string.
           github_token: ${{ steps.load-github-credentials.outputs.HOMEBREW_TAP_GITHUB_TOKEN }}
-
-          # Git author info used to commit to the homebrew tap.
-          # Defaults are shown - strings.
           commit_owner: homebrew-releaser
           commit_email: homebrew-releaser@easytocloud.com
-
-          # Custom dependencies in case other formulas are needed to build the current one.
-          # Optional - multiline string.
           depends_on: |
             "easytocloud/tap/zsh_functions" 
-
-          # Custom install command for your formula.
-          # Required - string.
           install: |
             bin.install "distribution/bin/aws-profile-organizer-setup"
             bin.install "distribution/bin/aws-profile-organizer-rc"
@@ -72,46 +50,35 @@ jobs:
             zsh_function.install "distribution/functions/awsprofile"
             zsh_function.install "distribution/functions/awsmfa"
 
+            prefix.install Dir["distribution/functions/*"]
             bash_completion.install "completions/aws-profile-organizer-completion.bash"
             zsh_completion.install "completions/aws-profile-organizer-completion.zsh"
-           
-          # Custom test command for your formula so you can run `brew test`.
-          # Optional - string.
-          # test: 'assert_match("Please set AWS_PROFILE before calling akskrotate", shell_output("akskrotate 2>&1", 1))'
+            
+            # Create a wrapper script to source the functions and completions
+            (bin/"aws-profile-organizer").write <<~EOS
+              #!/bin/bash
+              if [ -n "$BASH_VERSION" ]; then
+                source "#{prefix}/awsenv"
+                source "#{prefix}/awsprofile"
+                source "#{bash_completion}/aws-profile-organizer-completion.bash"
+              elif [ -n "$ZSH_VERSION" ]; then
+                source "#{prefix}/awsenv"
+                source "#{prefix}/awsprofile"
+                source "#{zsh_completion}/aws-profile-organizer-completion.zsh"
+              else
+                echo "Unsupported shell. Please use Bash or Zsh."
+              fi
+            EOS
+            
+            chmod 0755, bin/"aws-profile-organizer"
 
-          # Adds URL and checksum targets for different OS and architecture pairs. Using this option assumes 
-          # a tar archive exists on your GitHub repo with the following URL pattern (this cannot be customized):
-          # https://github.com/{GITHUB_OWNER}/{REPO_NAME}/releases/download/{TAG}/{REPO_NAME}-{VERSION}-{OPERATING_SYSTEM}-{ARCHITECTURE}.tar.gz'
-          # Darwin AMD pre-existing path example: https://github.com/justintime50/myrepo/releases/download/v1.2.0/myrepo-1.2.0-darwin-amd64.tar.gz
-          # Linux ARM pre-existing path example: https://github.com/justintime50/myrepo/releases/download/v1.2.0/myrepo-1.2.0-linux-arm64.tar.gz
-          # Optional - booleans.
-          #target_darwin_amd64: true
-          #target_darwin_arm64: false
-          #target_linux_amd64: true
-          #target_linux_arm64: false
+          caveats: |
+            To use aws-profile-organizer, add the following to your .bashrc or .zshrc:
+              source "$(brew --prefix)/bin/aws-profile-organizer"
 
-          # Update your homebrew tap's README with a table of all projects in the tap.
-          # This is done by pulling the information from all your formula.rb files - eg:
-          #
-          # | Project                                    | Description  | Install                  |
-          # | ------------------------------------------ | ------------ | ------------------------ |
-          # | [formula_1](https://github.com/user/repo1) | helpful text | `brew install formula_1` |
-          # | [formula_2](https://github.com/user/repo2) | helpful text | `brew install formula_2` |
-          # | [formula_3](https://github.com/user/repo3) | helpful text | `brew install formula_3` |
-          #
-          # Simply place the following in your README or wrap your project in these comment tags:
-          # <!-- project_table_start -->
-          # TABLE HERE
-          # <!-- project_table_end -->
-          #
-          # Finally, mark `update_readme_table` as `true` in your GitHub Action config and we'll do the work of building a custom table for you.
-          # Default is `false` - boolean.
+          test: |
+            assert_match "Usage: awsenv", shell_output("bash -c 'source #{bin}/aws-profile-organizer && awsenv --help'")
+            assert_match "Usage: awsprofile", shell_output("bash -c 'source #{bin}/aws-profile-organizer && awsprofile --help'")
           update_readme_table: true
-
-          # Skips committing the generated formula to a homebrew tap (useful for local testing).
-          # Default is shown - boolean.
           skip_commit: false
-
-          # Logs debugging info to console.
-          # Default is shown - boolean.
           debug: true
