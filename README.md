@@ -2,6 +2,11 @@
 
 ![release workflow](https://github.com/easytocloud/aws-profile-organizer/actions/workflows/release.yml/badge.svg)
 
+> **This repository is maintained for legacy compatibility.**
+>
+> New users should use [aws-envs](https://github.com/easytocloud/aws-envs) for setup and [oh-my-easytocloud](https://github.com/easytocloud/oh-my-easytocloud) for the `ase` / `asp` shell commands.
+> The underlying `~/.aws/aws-envs/` directory structure is identical — existing setups continue to work as-is.
+
 Organize and switch between your AWS profiles easily, especially when dealing with multiple AWS organizations.
 
 ## Problem Statement
@@ -22,18 +27,20 @@ aws-profile-organizer solves these problems by:
 
 ## Quick Start
 
+> For new setups, see [aws-envs](https://github.com/easytocloud/aws-envs) and [oh-my-easytocloud](https://github.com/easytocloud/oh-my-easytocloud).
+
 ```shell
-# Install the tool
+# Install the tool (legacy)
 brew tap easytocloud/tap
 brew install aws-profile-organizer
 
-# Set up your first environment
+# Set up your first environment (legacy — new: uvx aws-envs-setup)
 aws-profile-organizer-setup
 
-# Switch to an environment
+# Switch to an environment (legacy — new: ase)
 awsenv my-org-1
 
-# Switch to a profile within the current environment
+# Switch to a profile within the current environment (legacy — new: asp)
 awsprofile dev-account
 ```
 
@@ -51,6 +58,8 @@ awsprofile dev-account
 4. It's recommended to use a prompt that displays the current environment and profile, like the `oh-my-easytocloud` theme for `oh-my-zsh` (available at [oh-my-easytocloud](https://github.com/easytocloud/oh-my-easytocloud))
 
 ## Installation
+
+> **New users:** use [aws-envs](https://github.com/easytocloud/aws-envs) (`uvx aws-envs-setup`) for setup and [oh-my-easytocloud](https://github.com/easytocloud/oh-my-easytocloud) for the shell functions instead.
 
 The tools are created for macOS but should run on other Unix-like systems with minor modifications.
 
@@ -246,9 +255,18 @@ During login, these files are processed to set the start environment and profile
 You can use your favorite editor to edit the files. Both should just contain the name of the environment and profile respectively.
 
 ## Note
-This tool was originally designed to work with CLI version 1 but works with version 2 as well. 
-CLI version 2 has support for SSO and as such can do without long-term credentials. 
+This tool was originally designed to work with CLI version 1 but works with version 2 as well.
+CLI version 2 has support for SSO and as such can do without long-term credentials.
 Consider using [sso-tools](https://github.com/easytocloud/sso-tools) as well, also available from easytocloud in our HomeBrew tap. The sso-tools provide additional functionality for working with AWS SSO (Single Sign-On) environments.
+
+## Migration to aws-envs
+
+This project has been succeeded by [aws-envs](https://github.com/easytocloud/aws-envs).
+
+- **Setup:** run `uvx aws-envs-setup` instead of `aws-profile-organizer-setup` — no install required
+- **Daily use:** `ase` (switch environment) and `asp` (switch profile) replace `awsenv` and `awsprofile`, provided by the [oh-my-easytocloud](https://github.com/easytocloud/oh-my-easytocloud) plugin for oh-my-zsh
+
+The `~/.aws/aws-envs/` directory structure is identical — no data migration needed.
 
 ## Contributing
 
